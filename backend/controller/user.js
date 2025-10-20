@@ -50,4 +50,11 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const getUser = async(req,res)=>{
+
+  const user = await User.findById(req.params.id)
+  res.json({email:user.email})
+}
+
+
+module.exports = { registerUser, loginUser,getUser };

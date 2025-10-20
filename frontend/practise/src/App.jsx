@@ -31,6 +31,8 @@ const router = createBrowserRouter([
   {path:"/",element:<MainNavigation/>,children:[
 
      {path:'/', element:<Home/>,loader:getAllReceipe},
+     {path:'/myReceipe',element:<Home/>},
+     {path:'/favReceipe',element:<Home/>}
   ]}
 
  
