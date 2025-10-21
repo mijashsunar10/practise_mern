@@ -4,7 +4,10 @@ import './App.css'
 
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Home from './pages/Home'
+import AddFoodReceipe from './pages/AddFoodReceipe'
 import MainNavigation from './components/MainNavigation'
+// import { useNavigate } from "react-router-dom";
+
 
 import axios from 'axios'
 
@@ -32,7 +35,10 @@ const router = createBrowserRouter([
 
      {path:'/', element:<Home/>,loader:getAllReceipe},
      {path:'/myReceipe',element:<Home/>},
-     {path:'/favReceipe',element:<Home/>}
+     {path:'/favReceipe',element:<Home/>},
+
+     {path:'/addReceipe',element:<AddFoodReceipe/> }
+
   ]}
 
  

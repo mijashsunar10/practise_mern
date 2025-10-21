@@ -2,9 +2,12 @@ import React from 'react'
 
 import foodreceipe from '../assets/images/image.png'
 import Receipitems from '../components/Receipitems'
+import { useNavigate } from "react-router-dom";
+
 
 
 const Home = () => {
+   const navigate = useNavigate(); // ✅ Hook for navigation
   return (
     <>
 
@@ -14,7 +17,7 @@ const Home = () => {
         <div className='left'>
             <h1>Food Receipe</h1>
             <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora molestiae accusamus nam omnis aspernatur nisi vitae nemo distinctio amet facere eaque obcaecati, doloribus quia eum accusantium possimus esse iste fugiat harum unde quibusdam repellendus. Vero natus, ab, soluta nemo earum incidunt quod atque, voluptatem sapiente libero recusandae ipsa corrupti ullam.</h5>
-            <button>Share your receipe</button>
+            <button onClick={()=>navigate("/addReceipe")}>Share your receipe</button>
         </div>
         <div className='right'>
             <img src={foodreceipe} width="320px" height="300px" alt="" />
