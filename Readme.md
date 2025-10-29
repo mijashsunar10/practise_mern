@@ -25,3 +25,5 @@
 # for backend
 
 # node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+
+# npm i multer

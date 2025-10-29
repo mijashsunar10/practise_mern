@@ -28,7 +28,7 @@ export default function Receipitems() {
 
                                 <div className='timer'>
                                    <FaStopwatch />
-                                   30min 
+                                   {item.time}
                                 </div>
 
                                 <FaHeart />

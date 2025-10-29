@@ -8,7 +8,7 @@ const receipeSchema = mongoose.Schema({ //Here you’re defining a schema for yo
 
     },
     ingredients:{
-        type:String,
+        type:Array,
         required:true,
 
     },
