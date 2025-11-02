@@ -1,60 +1,80 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 import axios from 'axios';
 
-
 const AddFoodReceipe = () => {
+  const [receipeData, setReceipeData] = useState({
+    title: '',
+    time: '',
+    ingredients: '',
+    instructions: '',
+    file: null
+  });
 
-  const [receipeData,setReceipeData]=useState({})
-  const navigate=useNavigate()
-  const onHandleChange=(e)=>
-  {
-    
-    let val=(e.target.name==="ingredients") ? e.target.value.split(","):e.target.value
-    setReceipeData(pre=> ({...pre,[e.target.name]:val}))
+  const navigate = useNavigate();
 
-  }
+  const onHandleChange = (e) => {
+    const { name, value, files } = e.target;
 
-  const onHandleSubmit=async(e)=>{
-    e.preventDefault()
-    console.log(receipeData)
-    await axios.post("http://localhost:3000/receipe",receipeData).then(()=>navigate("/"))
-  }
+    setReceipeData((prev) => ({
+      ...prev,
+      [name]: name === "file" ? files[0] : value
+    }));
+  };
+
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', receipeData.title);
+    formData.append('time', receipeData.time);
+    formData.append('instructions', receipeData.instructions);
+    formData.append('ingredients', receipeData.ingredients);
+    formData.append('file', receipeData.file); // must match multer fieldname
+
+    try {
+      const res = await axios.post("http://localhost:3000/receipe", formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      console.log(res.data);
+      navigate("/");
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+  };
+
   return (
-    <>
-      <div className="container">
-        <form action="" className="form"  onSubmit={onHandleSubmit}>
-            <div className="form-control">
-                <label htmlFor="">Title</label>
-                <input type="text" className='input' name='title' onChange={onHandleChange}/>
-            </div>
+    <div className="container">
+      <form className="form" onSubmit={onHandleSubmit}>
+        <div className="form-control">
+          <label>Title</label>
+          <input type="text" name="title" className="input" onChange={onHandleChange} />
+        </div>
 
-             <div className="form-control">
-                <label htmlFor="">Time</label>
-                <input type="text" className='input' name='time' onChange={onHandleChange}/>
-            </div>
-             <div className="form-control">
-                <label htmlFor="">Ingredients</label>
-                <textarea type="text" className='input-textarea' name='ingredients' rows="5" onChange={onHandleChange}></textarea>
-            </div>
+        <div className="form-control">
+          <label>Time</label>
+          <input type="text" name="time" className="input" onChange={onHandleChange} />
+        </div>
 
-            <div className="form-control">
-                <label htmlFor="">Instructions</label>
-                <textarea type="text" className='input-textarea' name='instructions' rows="5" onChange={onHandleChange} ></textarea>
-            </div>
+        <div className="form-control">
+          <label>Ingredients</label>
+          <textarea name="ingredients" rows="4" className="input-textarea" onChange={onHandleChange}></textarea>
+        </div>
 
-             <div className="form-control">
-                <label htmlFor="">Recipe Image</label>
-                <input type="file" className='input' name='file' />
-            </div>
-            <button type='submit'>Add Receipe</button>
-             
-        </form>
-      </div>
-      
-    </>
-  )
-}
+        <div className="form-control">
+          <label>Instructions</label>
+          <textarea name="instructions" rows="4" className="input-textarea" onChange={onHandleChange}></textarea>
+        </div>
 
-export default AddFoodReceipe
+        <div className="form-control">
+          <label>Recipe Image</label>
+          <input type="file" name="file" className="input" onChange={onHandleChange} />
+        </div>
+
+        <button type="submit">Add Recipe</button>
+      </form>
+    </div>
+  );
+};
+
+export default AddFoodReceipe;

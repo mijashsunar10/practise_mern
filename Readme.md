@@ -27,3 +27,4 @@
 # node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
 # npm i multer
+# FOr multer goto npm js multer pacakge

@@ -17,7 +17,7 @@ export default function Receipitems() {
             {
                 return(
                     <div key={index} className='card' >
-                        <img src={foodImg} alt="" width="120px" height="100px" />
+                        <img src={`http://localhost:3000/images/${item.coverImage}`} alt="" width="120px" height="100px" />
                         <div className='card-body'>
                             <div className='title' >
                                 {item.title}

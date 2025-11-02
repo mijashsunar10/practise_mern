@@ -22,7 +22,7 @@ const receipeSchema = mongoose.Schema({ //Here you’re defining a schema for yo
       
 
     },
-    image:{
+    coverImage:{
         type:String,
       
     },

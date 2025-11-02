@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { getReceipe,addRecipe,editReceipe,getReceipes } = require('../controller/receipe');
+const { getReceipe,addRecipe,editReceipe,getReceipes,upload } = require('../controller/receipe');
 
 const router = express.Router();
 
@@ -9,7 +9,9 @@ router.get('/', getReceipe); //Get receipe list
 
 router.get("/:id",getReceipes);//Get recipe by Id
 
-router.post("/",addRecipe);//Add new recipe
+router.post("/",upload.single('file'),addRecipe);//Add new recipe
+
+//upload.single('file') the name should be same as name of the frontend the image 
 
 router.put("/:id",editReceipe);//Update recipe by Id
 

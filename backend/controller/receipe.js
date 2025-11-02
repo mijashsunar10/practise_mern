@@ -1,10 +1,27 @@
 const Receipes = require('../models/receipe')
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images');
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname); // get file extension (.jpg, .png, etc.)
+    const filename = Date.now() + '-' + file.fieldname + ext;
+    cb(null, filename);
+  }
+});
+
+// const upload = multer({ storage: storage });
+
+const upload = multer({ storage: storage })
 
 const getReceipe = async(req,res)=>{
     const receipes = await Receipes.find();
     res.json(receipes);
 }
-
+    
 const getReceipes = async(req, res) => {
     // res.send('Get receipe list');
 
@@ -15,27 +32,31 @@ const getReceipes = async(req, res) => {
 
 
 // Add new receipe
-const addRecipe = async (req, res) => { // // Define an async function named addRecipe (handles adding a new recipe)
-    const { title, ingredients, instructions, time } = req.body;
+const addRecipe = async (req, res) => {
+  const { title, ingredients, instructions, time } = req.body;
 
-    if (!title || !ingredients || !instructions) {
-        return res.json({ message: "Required fields cannot be empty" });
-    }
+  console.log("File:", req.file);
+  console.log("Body:", req.body); // should now contain proper data
 
-    try {
-        const newRecipe = await Receipes.create({
-            title,
-            ingredients,
-            instructions,
-            time
-        });
+  if (!title || !ingredients || !instructions) {
+    return res.status(400).json({ message: "Required fields cannot be empty" });
+  }
 
-        return res.json(newRecipe);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error while adding recipe" });
-    }
-}
+  try {
+    const newRecipe = await Receipes.create({
+      title,
+      ingredients: ingredients.split(',').map(i => i.trim()),
+      instructions,
+      time,
+      coverImage: req.file.filename
+    });
+
+    res.json(newRecipe);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Server error while adding recipe" });
+  }
+};
 
 const editReceipe = async(req, res) => {
     // res.send('Update recipe by Id');
@@ -61,4 +82,4 @@ const editReceipe = async(req, res) => {
 
 
 
-module.exports = {getReceipe, getReceipes,addRecipe,editReceipe}
+module.exports = {getReceipe, getReceipes,addRecipe,editReceipe,upload}
