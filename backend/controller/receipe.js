@@ -36,7 +36,7 @@ const addRecipe = async (req, res) => {
   const { title, ingredients, instructions, time } = req.body;
 
   console.log("File:", req.file);
-  console.log("Body:", req.body); // should now contain proper data
+  console.log("Body:", req.body); 
 
   if (!title || !ingredients || !instructions) {
     return res.status(400).json({ message: "Required fields cannot be empty" });
@@ -48,7 +48,8 @@ const addRecipe = async (req, res) => {
       ingredients: ingredients.split(',').map(i => i.trim()),
       instructions,
       time,
-      coverImage: req.file.filename
+      coverImage: req.file.filename,
+      createdBy: req.user.id
     });
 
     res.json(newRecipe);
@@ -57,6 +58,7 @@ const addRecipe = async (req, res) => {
     res.status(500).json({ message: "Server error while adding recipe" });
   }
 };
+
 
 const editReceipe = async(req, res) => {
     // res.send('Update recipe by Id');

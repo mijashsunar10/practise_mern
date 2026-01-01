@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import InputForm from "./InputForm";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   // ✅ Check token on mount
   useEffect(() => {
@@ -22,14 +23,24 @@ const Navbar = () => {
     }
   };
 
+  // ✅ Handle protected link click (like My Recipe)
+  const handleProtectedClick = (path) => {
+    if (!isLoggedIn) {
+      setIsOpen(true); // open login modal
+    } else {
+      navigate(path); // navigate if logged in
+    }
+  };
+
   // ✅ Handle logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setIsOpen(false);
+    navigate("/"); // redirect to home
   };
 
-  // ✅ Listen for token changes (after successful login)
+  // ✅ When login succeeds
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
     setIsOpen(false);
@@ -41,28 +52,29 @@ const Navbar = () => {
         <h2>Food Blog</h2>
         <ul>
           <li>
-            <NavLink
-              to="/"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
+            <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
               Home
             </NavLink>
           </li>
+
+          {/* ✅ Secure My Recipe */}
           <li>
-            <NavLink
-              to="/myReceipe"
-              style={{ textDecoration: "none", color: "inherit" }}
+            <p
+              style={{ cursor: "pointer", margin: 0 }}
+              onClick={() => handleProtectedClick("/myReceipe")}
             >
               My Recipe
-            </NavLink>
+            </p>
           </li>
+
+          {/* ✅ Secure Favorites */}
           <li>
-            <NavLink
-              to="/favReceipe"
-              style={{ textDecoration: "none", color: "inherit" }}
+            <p
+              style={{ cursor: "pointer", margin: 0 }}
+              onClick={() => handleProtectedClick("/favReceipe")}
             >
               Favorites
-            </NavLink>
+            </p>
           </li>
 
           {/* ✅ Show Login OR Logout */}
@@ -80,7 +92,7 @@ const Navbar = () => {
         </ul>
       </header>
 
-      {/* ✅ Modal only if not logged in */}
+      {/* ✅ Show login modal if not logged in */}
       {!isLoggedIn && isOpen && (
         <Modal onClose={() => setIsOpen(false)}>
           <InputForm onLoginSuccess={handleLoginSuccess} />

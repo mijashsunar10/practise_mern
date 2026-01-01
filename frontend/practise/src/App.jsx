@@ -29,12 +29,31 @@ const getAllReceipe = async()=>{  //You’re creating an asynchronous arrow func
   return allReceipes
 }
 
+const getMyReceipe = async () => {
+  // ✅ Get logged-in user data from localStorage
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // If user data doesn’t exist, return an empty array
+  if (!user || !user.id) {
+    return [];
+  }
+
+  // ✅ Get all recipes (using your existing getAllReceipe function)
+  const allReceipes = await getAllReceipe();
+
+  // ✅ Filter only those created by the logged-in user
+  const myReceipes = allReceipes.filter(
+    (item) => item.createdBy === user.id
+  );
+
+  return myReceipes;
+};
 
 const router = createBrowserRouter([
   {path:"/",element:<MainNavigation/>,children:[
 
      {path:'/', element:<Home/>,loader:getAllReceipe},
-     {path:'/myReceipe',element:<Home/>},
+     {path:'/myReceipe',element:<Home/>,loader:getMyReceipe},
      {path:'/favReceipe',element:<Home/>},
 
      {path:'/addReceipe',element:<AddFoodReceipe/> }
